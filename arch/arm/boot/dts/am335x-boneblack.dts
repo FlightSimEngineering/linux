@@ -11,7 +11,7 @@
 #include "am33xx-es2.dtsi"
 #include "am335x-bone-common.dtsi"
 #include "am33xx-overlay-edma-fix.dtsi"
-/* #include "am335x-bone-jtag.dtsi" */
+#include "am335x-bone-jtag.dtsi"
 
 / {
 	model = "TI AM335x BeagleBone Black";
