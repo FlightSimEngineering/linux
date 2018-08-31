@@ -919,7 +919,6 @@ static int spi_transfer_one_message(struct spi_master *master,
 				    struct spi_message *msg)
 {
 	struct spi_transfer *xfer;
-	bool keep_cs = false;
 	int ret = 0;
 	unsigned long ms = 1;
 	struct spi_statistics *statm = &master->statistics;
@@ -984,10 +983,8 @@ static int spi_transfer_one_message(struct spi_master *master,
 			udelay(xfer->delay_usecs);
 
 		if (xfer->cs_change) {
-			if (list_is_last(&xfer->transfer_list,
+			if (!list_is_last(&xfer->transfer_list,
 					 &msg->transfers)) {
-				keep_cs = true;
-			} else {
 				spi_set_cs(msg->spi, false);
 				udelay(10);
 				spi_set_cs(msg->spi, true);
@@ -998,8 +995,7 @@ static int spi_transfer_one_message(struct spi_master *master,
 	}
 
 out:
-	if (ret != 0 || !keep_cs)
-		spi_set_cs(msg->spi, false);
+	spi_set_cs(msg->spi, false);
 
 	if (msg->status == -EINPROGRESS)
 		msg->status = ret;
